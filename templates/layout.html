@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}}</title>
+    <link rel="stylesheet" href="/static/layout_style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+</head>
+<body>
+    <div>
+        <nav class="bmr-nav">
+            <div class="logo-wrapper">
+                <a href="{{ url_for('home') }}">
+                    <img src="/static/images/logo with text bg-rmv.png"
+                        alt="BiteMyRoll"
+                        class="logo-img">
+                </a>
+            </div>
+
+
+            <div class="bmr-links">
+                <a href="{{ url_for('menu') }}">OUR MENU</a>
+                <a href="{{ url_for('orders') }}">YOUR ORDER</a>
+                <a href="{{ url_for('contact') }}">CONTACT</a>
+                <a href="{{ url_for('about') }}">ABOUT&nbsp;US</a>
+            </div>
+
+            <div class="bmr-auth">
+                <a href="{{ url_for('login') }}"  class="outline">LOGIN</a>
+                <a href="{{ url_for('signup') }}" class="solid"   id="signin">SIGN&nbsp;UP</a>
+            </div>
+            <div class="mobile-menu-toggle" onclick="toggleMobileMenu()">
+                <i class="fas fa-bars"></i>
+            </div>
+            <div class="mobile-menu" id="mobileMenu">
+                <a href="{{ url_for('menu') }}">OUR MENU</a>
+                <a href="{{ url_for('orders') }}">YOUR ORDER</a>
+                <a href="{{ url_for('contact') }}">CONTACT</a>
+                <a href="{{ url_for('about') }}">ABOUT US</a>
+                <a href="{{ url_for('login') }}">LOGIN</a>
+                <a href="{{ url_for('signup') }}">SIGN UP</a>
+            </div>
+        </nav>
+    </div>
+
+    
+
+
+    {% block content %}
+    {% endblock %}
+    <div id="toast-container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% for category, message in messages %}
+            <div class="toast {{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endwith %}
+    </div>
+
+    <footer>
+        <p>© 2025 BiteMyRoll. All rights reserved.</p>
+    </footer>
+</body>
+    <script>
+    function toggleMobileMenu() {
+        const menu = document.getElementById('mobileMenu');
+        menu.classList.toggle('show');
+    }
+    </script>
+</html>
