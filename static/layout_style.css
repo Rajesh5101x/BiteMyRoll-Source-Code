@@ -92,6 +92,10 @@ footer {
 /* --- mobile: hide centre links for now (replace with burger later) --- */
 @media (max-width:768px){
   .bmr-links{ display:none; }
+  .logo-img{
+    height: 40px;
+    margin-left: -21px;
+  }
 }
 
 #toast-container {
@@ -152,3 +156,50 @@ footer {
             box-shadow: 0 4px 12px 2px rgba(255, 157, 45, 0.3);
         }
     }
+
+.mobile-menu-toggle {
+    display: none;
+    font-size: 1.5rem;
+    color: #ff9d2d;
+    cursor: pointer;
+}
+
+.mobile-menu {
+    display: none;
+    flex-direction: column;
+    background-color: #0d0d0d;
+    padding: 1rem;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    left: 0;
+    z-index: 998;
+    align-items: center;
+}
+
+.mobile-menu a {
+    color: white;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid #222;
+}
+
+.mobile-menu.show {
+    display: flex;
+}
+
+@media (max-width: 768px) {
+    .bmr-links,
+    .bmr-auth {
+        display: none;
+    }
+    .mobile-menu-toggle {
+        display: block;
+    }
+    .mobile-menu-toggle { display: block;  }
+    .mobile-menu        { display: none;   }
+    .mobile-menu.show   { display: flex;   }
+}
+@media (min-width: 768px) {
+  .mobile-menu-toggle { display: none; }
+  .mobile-menu         { display: none; }
+}
