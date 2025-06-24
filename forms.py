@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SelectField, IntegerField, DateField, PasswordField, SubmitField, BooleanField
+from wtforms import StringField, SelectField, IntegerField, DateField, PasswordField, SubmitField, BooleanField, TextAreaField,HiddenField
 from wtforms.validators import DataRequired, Length, Email, Optional, NumberRange, EqualTo
 
 
@@ -100,3 +100,17 @@ class ChangePasswordForm(FlaskForm):
     )
     submit = SubmitField("Change Password")
 
+
+
+def buildRollForm(roll_data):
+    class RollForm(FlaskForm):
+        roll_name = HiddenField()
+        
+        Regular = IntegerField("Regular", validators=[Optional(), NumberRange(min=0, max=10)], default=0)
+        Large   = IntegerField("Large",   validators=[Optional(), NumberRange(min=0, max=10)], default=0)
+        Mega    = IntegerField("Mega",    validators=[Optional(), NumberRange(min=0, max=10)], default=0)
+
+        note    = TextAreaField("Special Instructions:")
+        submit  = SubmitField("Add To Cart")
+
+    return RollForm()
