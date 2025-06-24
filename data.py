@@ -108,3 +108,76 @@ ROLLS_DATA = {
         ],
     },
 }
+
+
+BEVERAGE_DATA = {
+    "Coca-Cola": {
+        "name": "Coca-Cola",
+        "image": "images/drinks/cocacola.png",
+        "desc": "Classic Coke with a refreshing fizz.",
+        "sizes": [
+            {"label": "250ml Can", "price": 35},
+            {"label": "500ml Bottle", "price": 50},
+            {"label": "1L Bottle", "price": 80}
+        ]
+    },
+    "Thumbs Up": {
+        "name": "Thumbs Up",
+        "image": "images/drinks/thumbsup.png",
+        "desc": "Strong cola flavor with bold bubbles.",
+        "sizes": [
+            {"label": "250ml Can", "price": 35},
+            {"label": "500ml Bottle", "price": 50},
+            {"label": "1L Bottle", "price": 80}
+        ]
+    },
+    "Sprite": {
+        "name": "Sprite",
+        "image": "images/drinks/sprite.png",
+        "desc": "Lemon-lime flavored drink, crisp and clear.",
+        "sizes": [
+            {"label": "250ml Can", "price": 35},
+            {"label": "500ml Bottle", "price": 50},
+            {"label": "1L Bottle", "price": 80}
+        ]
+    },
+    "Red Bull": {
+        "name": "Red Bull",
+        "image": "images/drinks/redbull.png",
+        "desc": "Energy drink to boost your energy and focus.",
+        "sizes": [
+            {"label": "250ml Can", "price": 110},
+            {"label": "350ml Can", "price": 140}
+        ]
+    },
+    "Monster Energy": {
+        "name": "Monster Energy",
+        "image": "images/drinks/monster.png",
+        "desc": "Big blast of energy with an electrifying taste.",
+        "sizes": [
+            {"label": "350ml Can", "price": 140},
+            {"label": "500ml Can", "price": 180}
+        ]
+    },
+    "Fanta": {
+        "name": "Fanta",
+        "image": "images/drinks/fanta.png",
+        "desc": "Fruity orange flavor, sweet and tangy.",
+        "sizes": [
+            {"label": "250ml Can", "price": 30},
+            {"label": "500ml Bottle", "price": 45},
+            {"label": "1L Bottle", "price": 75}
+        ]
+    },
+    "Pepsi": {
+        "name": "Pepsi",
+        "image": "images/drinks/pepsi.png",
+        "desc": "Bold cola flavor and full-on refreshment.",
+        "sizes": [
+            {"label": "250ml Can", "price": 35},
+            {"label": "500ml Bottle", "price": 50},
+            {"label": "1L Bottle", "price": 80}
+        ]
+    }
+}
+
