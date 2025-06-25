@@ -68,27 +68,27 @@ def detail(type):
                 "roll_detail.html",
                 form=form,
                 roll=roll,
-                roll_key=type.strip(),  # ✅ Pass stripped version too
+                roll_key=type.strip(),  
                 cred=session.get("User_email"),
                 title=f"BiteMyRole - {ROLLS_DATA[type]['name']}", 
                 database = database
             )   
 
         if qty_regular and qty_regular > 0:
-            qty["Regular"] = qty_regular  # Capital R
+            qty["Regular"] = qty_regular  
 
         if qty_large and qty_large > 0:
-            qty["Large"] = qty_large      # Capital L
+            qty["Large"] = qty_large     
 
         if qty_mega and qty_mega > 0:
-            qty["Mega"] = qty_mega        # Capital M
+            qty["Mega"] = qty_mega        
 
         
         if not session.get("User_email"):
             return redirect(url_for("login", next=request.path))
         
         if session.get("User_email") in database:   
-            database[session.get("User_email")]["cart"][type.strip()] = {  # ✅ Strip whitespace from key
+            database[session.get("User_email")]["cart"][type.strip()] = {  
                 "name": roll["name"],   
                 "size": qty,
                 "note": form.note.data
@@ -102,7 +102,7 @@ def detail(type):
         "roll_detail.html",
         form=form,
         roll=roll,
-        roll_key=type.strip(),  # ✅ Pass stripped version too
+        roll_key=type.strip(),
         cred=session.get("User_email"),
         title=f"BiteMyRole - {ROLLS_DATA[type]['name']}", 
         database = database
@@ -178,7 +178,7 @@ def drinksDetail(type):
 @app.route("/login", methods=["GET", "POST"])
 def login():
     form = loginForm()
-    next_page = request.args.get("next")  # Safely get next param
+    next_page = request.args.get("next") 
 
     if form.validate_on_submit():
         email = form.email.data
@@ -203,7 +203,7 @@ def login():
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
     form = signupForm()
-    next_page = request.args.get("next")  # Get the next page from URL params
+    next_page = request.args.get("next") 
 
     if form.validate_on_submit():
         if form.email.data in database:
@@ -230,7 +230,7 @@ def signup():
         session["user_password"] = form.password.data
         flash("Signed up successfully!", "success")
 
-        return redirect(next_page or url_for("menu"))  # Go to next page if present, else menu
+        return redirect(next_page or url_for("menu"))  
 
     return render_template("signup.html", form=form)
 
@@ -378,7 +378,6 @@ def set_location():
     location_data = request.get_json()
     user_email = session["User_email"]
 
-    # Store the location as nested dictionary
     database[user_email]["location"] = location_data
 
     return jsonify({"message": "Location saved successfully"})
