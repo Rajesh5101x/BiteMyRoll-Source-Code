@@ -8,31 +8,45 @@ PRODUCTS_DATA = {**ROLLS_DATA, **BEVERAGE_DATA}
 app = Flask(__name__)
 app.secret_key = 'some_secret_key'
 
-user_info = {}
-#user_email = "rajesh@gmail.com"
-#database[user_email] = {"info": user_info, "cart": {}, "orders": [], "visited_drinks": False, "location":""}
+user_info = {"password":"123456"}
+user_email = "rajesh@gmail.com"
+database[user_email] = {"info": user_info, "cart": {}, "orders": [], "visited_drinks": False, "location":""}
 
 @app.route('/')
 @app.route('/home')
 def home():
-    return render_template('home.html', title="BiteMyRoll: Rolling Happiness to Your Doorstep", cred = session.get("User_email")
- , database = database)
+    return render_template('home.html', 
+        title="BiteMyRoll: Rolling Happiness to Your Doorstep", 
+        cred = session.get("User_email"), 
+        database = database
+    )
 
 
 @app.route('/menu')
 def menu():
-    print(database[session.get("User_email")]["location"])
-    return render_template('menu.html', title="Today's menu", cred = session.get("User_email"), database = database)
+    return render_template('menu.html', 
+        title="Today's menu",
+        cred = session.get("User_email"), 
+        database = database
+    )
 
 
 @app.route('/contact')
 def contact():
-    return render_template('contact.html', title="Contact Us", cred = session.get("User_email"), database = database)
+    return render_template('contact.html', 
+        title="Contact Us", 
+        cred = session.get("User_email"), 
+        database = database
+    )
 
 
 @app.route('/about')
 def about():
-    return render_template('about.html', title="About Us", cred = session.get("User_email"), database = database)
+    return render_template('about.html', 
+        title="About Us", 
+        cred = session.get("User_email"), 
+        database = database
+    )
 
 
 
@@ -71,17 +85,19 @@ def detail(type):
 
         
         if not session.get("User_email"):
-            return redirect(url_for("login", next=type))
-
-        database[session.get("User_email")]["cart"][type.strip()] = {  # ✅ Strip whitespace from key
-            "name": roll["name"],   
-            "size": qty,
-            "note": form.note.data
-        }
+            return redirect(url_for("login", next=request.path))
+        
+        if session.get("User_email") in database:   
+            database[session.get("User_email")]["cart"][type.strip()] = {  # ✅ Strip whitespace from key
+                "name": roll["name"],   
+                "size": qty,
+                "note": form.note.data
+            }
+        else:
+            return redirect(url_for("signup", next=request.path))
 
         flash("Added to cart!", "success")
-        print(database[session.get("User_email")]["cart"])
-
+        return redirect(url_for("menu"))
     return render_template(
         "roll_detail.html",
         form=form,
@@ -98,8 +114,13 @@ def detail(type):
 
 @app.route('/drinks')
 def drinksMenu():
-    database[session.get("User_email")]["visited_drinks"] = True
-    return render_template("drinksMenu.html", title="Drinks", cred=session.get("User_email"), database = database)
+    if session.get("User_email"):
+        database[session.get("User_email")]["visited_drinks"] = True
+    return render_template("drinksMenu.html", 
+                            title="Drinks", 
+                            cred=session.get("User_email"), 
+                            database = database
+                        )
 
 
 @app.route('/drinksDetail/<type>', methods=["GET", "POST"])
@@ -129,17 +150,18 @@ def drinksDetail(type):
                 qty[drink["sizes"][2]["label"]] = qty_mega
 
             if not session.get("User_email"):
-                return redirect(url_for("login", next=type))
-
-            database[session.get("User_email")]["cart"][type.strip()] = {
-                "name": drink["name"],
-                "size": qty,
-                "note": form.note.data
-            }
+                return redirect(url_for("login", next=request.path))
+            if session.get("User_email") in database:
+                database[session.get("User_email")]["cart"][type.strip()] = {
+                    "name": drink["name"],
+                    "size": qty,
+                    "note": form.note.data
+                }
+            else:
+                return redirect(url_for("signup", next=request.path))
 
             flash("Added to cart!", "success")
-            print(database[session.get("User_email")]["cart"])
-
+            return redirect(url_for("drinksMenu"))
     return render_template(
         "drinks_detail.html",
         form=form,
@@ -156,21 +178,22 @@ def drinksDetail(type):
 @app.route("/login", methods=["GET", "POST"])
 def login():
     form = loginForm()
-    next = request.args.get("next")
-
-    email = form.email.data
-    password = form.password.data
+    next_page = request.args.get("next")  # Safely get next param
 
     if form.validate_on_submit():
+        email = form.email.data
+        password = form.password.data
+
         if email in database and password == database[email]["info"]["password"]:
             session["User_email"] = email
-            flash("Login successfully!", "success")
-            if next == "orders":
-                return redirect(url_for("orders", title="orders"))
-            elif next:
-                return redirect(url_for("detail", type=next, title=f"BiteMyRole - {next}"))
-            
+            session["user_password"] = password
+            flash("Login successful!", "success")
+
+            if next_page and next_page.startswith("/"):
+                return redirect(next_page)
+
             return redirect(url_for("menu"))
+
         else:
             flash("Invalid credentials", "danger")
 
@@ -180,12 +203,13 @@ def login():
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
     form = signupForm()
+    next_page = request.args.get("next")  # Get the next page from URL params
+
     if form.validate_on_submit():
         if form.email.data in database:
             flash("Email already registered.", "danger")
-            return redirect(url_for("signup"))
+            return redirect(url_for("signup", next=next_page))
 
-        global user_info,user
         user_info = {
             "username": form.username.data,
             "gender": form.gender.data,
@@ -193,32 +217,64 @@ def signup():
             "age": form.age.data,
             "password": form.password.data
         }
-        database[form.email.data] ={"info": user_info, "cart": {}, "orders": [], "visited_drinks": False,"location":""}
+
+        database[form.email.data] = {
+            "info": user_info,
+            "cart": {},
+            "orders": [],
+            "visited_drinks": False,
+            "location": ""
+        }
+
         session["User_email"] = form.email.data
         session["user_password"] = form.password.data
-        print(session.get("User_email"))
         flash("Signed up successfully!", "success")
-        return redirect(url_for("menu"))
+
+        return redirect(next_page or url_for("menu"))  # Go to next page if present, else menu
+
     return render_template("signup.html", form=form)
+
 
 
 @app.route("/orders")
 def orders():
     if not session.get("User_email"):
-        return redirect(url_for("login", next="orders"))
-    return render_template("orders.html", orders=database[session.get("User_email")]["orders"], ROLLS_DATA=PRODUCTS_DATA,cred= session.get("User_email"), title="Orders", database = database)
+        return redirect(url_for("login", next=request.path))
+
+    email = session["User_email"]
+    user_orders = database.get(email, {}).get("orders", [])
+
+    return render_template(
+        "orders.html",
+        orders=user_orders,
+        ROLLS_DATA=PRODUCTS_DATA,
+        cred=email,
+        title="Orders",
+        database=database
+    )
 
 
 
 @app.route("/cart")
 def cart():
     global ROLLS_DATA
-    return render_template("cart.html",data = database[session.get("User_email")]["cart"], ROLLS_DATA=PRODUCTS_DATA, cred = session.get("User_email"), title="Cart",visited_drinks=database[session.get("User_email")]["visited_drinks"], database = database)
+    return render_template("cart.html",
+            data = database[session.get("User_email")]["cart"], 
+            ROLLS_DATA=PRODUCTS_DATA, 
+            cred = session.get("User_email"), 
+            title="Cart",
+            visited_drinks=database[session.get("User_email")]["visited_drinks"], 
+            database = database
+        )
 
 @app.route('/logout')
 def logout():
     session["User_email"] = ""
-    return render_template('menu.html', title="Today's menu", cred = session.get("User_email"), database = database)
+    return render_template('menu.html', 
+            title="Today's menu", 
+            cred = session.get("User_email"), 
+            database = database
+        )
 
 
 @app.route('/changePassword', methods=["GET","POST"])
@@ -227,10 +283,19 @@ def changePassword():
     if form.validate_on_submit() and form.current_password.data == session["user_password"]:
         flash("Your Password has been changed successfully","success")
         session["user_password"] = form.current_password.data
-        return render_template('menu.html', title="Today's menu", cred = session.get("User_email"), database = database)
+        return render_template('menu.html', 
+                                title="Today's menu", 
+                                cred = session.get("User_email"), 
+                                database = database
+                                )
     else:
         flash("Your old credential did not match","error")
-    return  render_template('change_password.html',title = "Change Password", cred = session.get("User_email"),form=form, database = database)
+    return  render_template('change_password.html',
+                            title = "Change Password", 
+                            cred = session.get("User_email"),
+                            form=form, 
+                            database = database
+                            )
 
 
 
@@ -239,8 +304,8 @@ def checkout():
     total = request.args.get("total")
     if not session.get("User_email"):
         flash("Please log in to complete checkout.", "error")
-        return redirect(url_for("login"))
-
+        return redirect(url_for("login", next=request.path))
+     
     if not database[session.get("User_email")]["cart"]:
         flash("Your cart is empty!", "warning")
         return redirect(url_for("cart"))
@@ -305,13 +370,18 @@ def cancel_order(index):
 
 
 
-@app.route("/set_location/<location>")
-def set_location(location):
-    print(location)
-    user_email = session.get("User_email")
-    if user_email and user_email in database:
-        database[user_email]["location"] = location
-    return redirect(url_for("menu"))
+@app.route("/set_location", methods=["POST"])
+def set_location():
+    if not session.get("User_email"):
+        return jsonify({"error": "Unauthorized"}), 401
+
+    location_data = request.get_json()
+    user_email = session["User_email"]
+
+    # Store the location as nested dictionary
+    database[user_email]["location"] = location_data
+
+    return jsonify({"message": "Location saved successfully"})
 
 
 
