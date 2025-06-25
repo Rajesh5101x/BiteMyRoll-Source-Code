@@ -1,3 +1,5 @@
+database = {}
+
 ROLLS_DATA = {
     "Veg Delight Roll": {
         "name": "Veg Delight Roll",
