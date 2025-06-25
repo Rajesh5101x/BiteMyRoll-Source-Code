@@ -17,6 +17,9 @@ html,body {
             drop-shadow(0 0 12px rgba(255,157,45,.4));
     transform: scale(1.04);     
 }
+#location{
+  max-width: 240px;
+}
 
 
 /* ============  NAVBAR STYLES  ============ */
@@ -43,6 +46,7 @@ html,body {
   font-weight:500;
   letter-spacing:.4px;
   transition:color .25s ease;
+  padding: 9px;
 }
 .bmr-nav a:hover{ color:#ff9d2d; }          /* warm orange highlight */
 
@@ -81,6 +85,10 @@ html,body {
   transform: scale(1.04);  
 }
 
+#location{
+  margin-right: -2vw;
+}
+
 
 footer {
     background-color: #333;
@@ -95,6 +103,12 @@ footer {
   .logo-img{
     height: 40px;
     margin-left: -21px;
+  }
+  #location{
+    max-width: 100px;
+  }
+  .bmr-nav{
+    padding: 0px 0.9rem;
   }
 }
 
@@ -130,7 +144,7 @@ footer {
 
 /* ─── dropdown core (unchanged) ─── */
 .bmr-authe.dropdown { position: relative; }
-.bmr-authe{ display:flex; gap:1.7rem; }
+.bmr-authe{ display:flex; gap:1.7rem; align-items: center;}
 .bmr-authe.dropdown #userBtn { background:none; border:none; cursor:pointer; font-size:1.4rem; color:inherit; }
 .bmr-authe .dropdown-menu { position:absolute; right:0; top:110%; background:#1a1a1a; border-radius:6px; 
   animation: twinkle-shadow 2s infinite alternate;
