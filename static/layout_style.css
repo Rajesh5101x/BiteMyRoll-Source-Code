@@ -4,10 +4,11 @@ html,body {
     color: #333;
     margin: 0;
     padding: 0;
+    max-width: 100vw;
 }
 
 .logo-img {
-    height: 50px;
+    height: 56px;
     filter: drop-shadow(0 0 4px rgba(255,157,45,.3));
     transition: filter .3s ease, transform .3s ease;
 }
@@ -101,7 +102,7 @@ footer {
 @media (max-width:768px){
   .bmr-links{ display:none; }
   .logo-img{
-    height: 40px;
+    height: 29px;
     margin-left: -21px;
   }
   #location{
@@ -148,7 +149,7 @@ footer {
 .bmr-authe.dropdown #userBtn { background:none; border:none; cursor:pointer; font-size:1.4rem; color:inherit; }
 .bmr-authe .dropdown-menu { position:absolute; right:0; top:110%; background:#1a1a1a; border-radius:6px; 
   animation: twinkle-shadow 2s infinite alternate;
-    min-width:180px; box-shadow:0 4px 10px rgba(0,0,0,.08); display:none; z-index:1000; }
+    min-width:200px; box-shadow:0 4px 10px rgba(0,0,0,.08); display:none; z-index:1000; }
 .bmr-authe .dropdown-menu.show { display:block; }
 .bmr-authe .dropdown-menu a { display:block; padding:10px 14px; text-decoration:none; font-size:0.95rem; }
 /* ─── NEW: user header ─── */
@@ -172,6 +173,12 @@ footer {
         }
     }
 
+
+.cart-popup{
+  animation: twinkle-shadow 2s infinite alternate
+}
+
+
 .mobile-menu-toggle {
     display: none;
     font-size: 1.5rem;
@@ -187,11 +194,12 @@ footer {
     position: absolute;
     top: 100%;
     right: 0;
-    left: 0;
     z-index: 998;
-    align-items: center;
+    align-items: flex-start;
     width: 130px;
+    box-shadow: -2px 2px 8px rgba(0,0,0,0.3); /* optional shadow */
 }
+
 
 .mobile-menu a {
     color: white;
@@ -211,11 +219,25 @@ footer {
     .mobile-menu-toggle {
         display: block;
     }
-    .mobile-menu-toggle { display: block;  }
-    .mobile-menu        { display: none;   }
-    .mobile-menu.show   { display: flex;   }
+    .mobile-menu {
+        display: none;
+    }
+    .mobile-menu.show {
+        display: flex;
+        right: 0;  /* Ensure this is here */
+        left: auto; /* Prevent left stretching */
+    }
 }
+
 @media (min-width: 768px) {
   .mobile-menu-toggle { display: none; }
   .mobile-menu         { display: none; }
 }
+
+h1, h2, h3, h4, h5, h6 {
+  font-size: revert;
+  font-weight: revert;
+}
+
+
+
